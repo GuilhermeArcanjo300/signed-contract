@@ -1,7 +1,6 @@
 import { IsNotEmpty } from "class-validator";
-import { UserCreateInterface } from "src/domain/user/create";
 
-export class CreateDto implements UserCreateInterface {
+export class CreateDto {
     @IsNotEmpty({ message: 'Nome é obrigatório' })
     name: string;
 
