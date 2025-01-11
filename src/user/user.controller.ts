@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
 import { CreateDto } from './dto/create.dto';
 import { UserService } from './user.service';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -8,16 +9,26 @@ export class UserController {
         private readonly userService: UserService
     ) {}
 
-    @Post()
+    @Post('/create')
+    @HttpCode(HttpStatus.CREATED)
     async create(@Body() data: CreateDto) {
-        this.userService.create({
-            name: data.name,
-            email: data.email
+        const { name, email } = data;
+        await this.userService.create({
+            name,
+            email
         });
     }
 
     @Get('/all')
+    @HttpCode(HttpStatus.OK)
     async findAll() {
         return await this.userService.findAll();
+    }
+
+    @Post('/reset-password/:id')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async resetPassword(@Body() data: ResetPasswordDto, @Param('id') id: string) {
+        const { password } = data;
+        await this.userService.setNewPassword(id, password);
     }
 }

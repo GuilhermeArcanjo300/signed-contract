@@ -8,6 +8,6 @@ export interface UserServiceInterface {
     delete(id: string): UserInterface;
     inactive(id: string): UserInterface;
     setFirstPassword(id: string, password: string): UserInterface;
-    setNewPassword(id: string, password: string): UserInterface;
+    setNewPassword(id: string, password: string): Promise<UserInterface>;
     findAll(): Promise<UserInterface[]>;
 }

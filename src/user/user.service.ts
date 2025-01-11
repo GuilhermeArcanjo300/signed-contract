@@ -5,6 +5,7 @@ import { UserUpdateInterface } from 'src/domain/user/update';
 import { User } from './entities/user.entity';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { UserMapper } from './mappers/user.mapper';
+import { createHash } from 'src/util/crypto/create-hash';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
@@ -41,7 +42,17 @@ export class UserService implements UserServiceInterface {
     setFirstPassword(id: string, password: string): User {
         throw new Error('Method not implemented.');
     }
-    setNewPassword(id: string, password: string): User {
-        throw new Error('Method not implemented.');
+    async setNewPassword(id: string, password: string): Promise<User> {
+        const passwordHash = createHash(password);
+        const result = await this.prismaService.user.update({
+            where: {
+                id
+            },
+            data: {
+                password: passwordHash
+            }
+        });
+
+        return UserMapper.mapModelToEntity(result);
     }
 }
