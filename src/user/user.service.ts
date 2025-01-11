@@ -6,12 +6,28 @@ import { User } from './entities/user.entity';
 import { PrismaService } from 'src/infra/database/prisma.service';
 import { UserMapper } from './mappers/user.mapper';
 import { createHash } from 'src/util/crypto/create-hash';
+import { UserInterface } from 'src/domain/user/user';
+import { ArgumentNullException } from 'src/util/exception/argument-null';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
     constructor(
         private readonly prismaService: PrismaService
     ) {}
+
+    async findByEmail(email: string): Promise<UserInterface> {
+        const user = await this.prismaService.user.findFirst({
+            where: {
+                email,
+                deletedAt: null
+            }
+        });
+
+        ArgumentNullException.throwIfNull(user, `Usuário com e-mail ${email} não encontrado!`);
+
+        return UserMapper.mapModelToEntity(user);
+    }
+
     async findAll(): Promise<User[]> {
         const result = await this.prismaService.user.findMany({
             where: {

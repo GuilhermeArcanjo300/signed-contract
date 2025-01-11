@@ -10,4 +10,5 @@ export interface UserServiceInterface {
     setFirstPassword(id: string, password: string): UserInterface;
     setNewPassword(id: string, password: string): Promise<UserInterface>;
     findAll(): Promise<UserInterface[]>;
+    findByEmail(email: string): Promise<UserInterface>;
 }

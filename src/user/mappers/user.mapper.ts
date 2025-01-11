@@ -8,6 +8,7 @@ export class UserMapper {
         user.name = model.name;
         user.email = model.email;
         user.active = model.active;
+        user.password = model.password
         user.createdAt = model.createdAt;
         user.updatedAt = model.updatedAt;
         user.deletedAt = model.deletedAt;
